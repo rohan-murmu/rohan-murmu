@@ -43,8 +43,8 @@ const Projects = () => {
       </div>
       <p className="projects-intro cursor-scale small">
         Two I took all the way through — designed, built, documented, benchmarked and deployed.
-        They are examples rather than the boundary; both happen to be infrastructure for coding
-        agents, which is where my attention has been lately.
+        Both are backend tools with a model inside them rather than AI demos, which is the only
+        way I know how to build this.
       </p>
 
       <div className="projects-layout">

@@ -7,125 +7,6 @@ import "../styles/systems.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* Retrieval: a corpus narrowed down to the few passages that earn a place in the window. */
-function RetrievalDiagram() {
-  const cells = [];
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 3; c++) {
-      const hit = (r === 1 && c === 2) || (r === 3 && c === 0);
-      cells.push(
-        <rect
-          key={`${r}-${c}`}
-          className={`cell${hit ? " hit" : ""}`}
-          x={8 + c * 15}
-          y={26 + r * 15}
-          width={11}
-          height={11}
-          rx={1}
-        />
-      );
-    }
-  }
-  const boxes = [
-    { x: 86, label: "chunk" },
-    { x: 174, label: "embed" },
-    { x: 262, label: "index" },
-    { x: 350, label: "rerank" },
-  ];
-  return (
-    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Retrieval pipeline">
-      <line className="wire" x1="56" y1="52" x2="440" y2="52" />
-      <line className="flow" x1="56" y1="52" x2="440" y2="52" />
-      {cells}
-      <text className="lbl-sm" x="8" y="100">corpus</text>
-
-      {boxes.map((b, i) => (
-        <g key={b.label}>
-          <rect className="node-fill" x={b.x} y={30} width={56} height={44} rx={2} />
-          <text className="lbl" x={b.x + 28} y={90} textAnchor="middle">{b.label}</text>
-        </g>
-      ))}
-
-      {/* chunk: three slices */}
-      <g className="pulse">
-        <rect className="cell" x="96" y="40" width="36" height="6" rx="1" />
-        <rect className="cell" x="96" y="49" width="36" height="6" rx="1" />
-        <rect className="cell" x="96" y="58" width="36" height="6" rx="1" />
-      </g>
-      {/* embed: a vector cloud */}
-      <g className="pulse">
-        {[[188,44],[200,56],[212,42],[196,66],[216,60],[206,50]].map(([cx, cy], i) => (
-          <circle key={i} className="cell" cx={cx} cy={cy} r="2.4" />
-        ))}
-      </g>
-      {/* index: lit neighbours */}
-      <g>
-        {[0,1,2,3].map((i) => (
-          <rect key={i} className={i === 1 ? "cell hit" : "cell"}
-                x={272 + (i % 2) * 20} y={38 + Math.floor(i / 2) * 20}
-                width="16" height="14" rx="1" />
-        ))}
-      </g>
-      {/* rerank: reordered rows, the top one promoted */}
-      <g>
-        <rect className="cell hit" x="360" y="38" width="38" height="6" rx="1" />
-        <rect className="cell" x="360" y="48" width="28" height="6" rx="1" />
-        <rect className="cell" x="360" y="58" width="33" height="6" rx="1" />
-      </g>
-
-      <rect className="node" x="452" y="22" width="56" height="60" rx="2" />
-      <g className="pulse">
-        <rect className="cell hit" x="460" y="30" width="40" height="7" rx="1" />
-        <rect className="cell hit" x="460" y="41" width="40" height="7" rx="1" />
-      </g>
-      <text className="lbl" x="480" y="98" textAnchor="middle">window</text>
-    </svg>
-  );
-}
-
-/* Agents: a loop, with the tool surface hanging off it. */
-function AgentDiagram() {
-  const cx = 150, cy = 62, r = 44;
-  const nodes = [
-    { a: -90, t: "model" },
-    { a: 0, t: "tool call" },
-    { a: 90, t: "execute" },
-    { a: 180, t: "observe" },
-  ];
-  return (
-    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Agent loop">
-      <circle className="wire" cx={cx} cy={cy} r={r} />
-      <circle className="orbit" cx={cx} cy={cy} r={r} strokeDasharray="34 244" />
-      {nodes.map(({ a, t }, i) => {
-        const rad = (a * Math.PI) / 180;
-        const x = cx + r * Math.cos(rad);
-        const y = cy + r * Math.sin(rad);
-        return (
-          <g key={t}>
-            <circle className="node-fill pulse" cx={x} cy={y} r="6" />
-            <text className="lbl" x={x} y={a === 90 ? y + 18 : a === -90 ? y - 11 : y - 11}
-                  textAnchor="middle">{t}</text>
-          </g>
-        );
-      })}
-
-      {/* the tool surface: what you choose to expose */}
-      <line className="wire" x1="196" y1="62" x2="286" y2="62" />
-      <line className="flow" x1="196" y1="62" x2="286" y2="62" />
-      <rect className="node-fill" x="286" y="26" width="104" height="72" rx="2" />
-      <text className="lbl" x="338" y="20" textAnchor="middle">mcp server</text>
-      {["read", "search", "check", "write ✗"].map((t, i) => (
-        <g key={t}>
-          <rect className={i === 3 ? "cell cut" : "cell"} x="296" y={34 + i * 16} width="84" height="11" rx="1" />
-          <text className="lbl-sm" x="302" y={43 + i * 16}>{t}</text>
-        </g>
-      ))}
-      <text className="lbl-sm" x="404" y="60">what you expose</text>
-      <text className="lbl-sm" x="404" y="74">is the design</text>
-    </svg>
-  );
-}
-
 /* Context: a window is a budget, and most agent failures are budget failures. */
 function ContextDiagram() {
   const segs = [
@@ -190,36 +71,6 @@ function CoreDiagram() {
       <text className="lbl-sm" x="294" y="96">model as a gate ✗</text>
       <text className="lbl-sm" x="412" y="70">reproducible,</text>
       <text className="lbl-sm" x="412" y="84">and testable</text>
-    </svg>
-  );
-}
-
-
-/* Optimisation: a claim without a number is a vibe. */
-function EvalDiagram() {
-  const rows = [
-    { t: "latency", before: 210, after: 96 },
-    { t: "cost", before: 168, after: 74 },
-    { t: "quality", before: 104, after: 182 },
-  ];
-  return (
-    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Measured optimisation">
-      {rows.map((r, i) => {
-        const y = 22 + i * 34;
-        return (
-          <g key={r.t}>
-            <text className="lbl-sm" x="8" y={y + 16}>{r.t}</text>
-            <rect className="cell cut" x="66" y={y} width={r.before} height="10" rx="1" />
-            <rect className="cell hit bar" x="66" y={y + 13} width={r.after} height="10" rx="1" />
-            <text className="lbl-sm" x={66 + Math.max(r.before, r.after) + 8} y={y + 18}>
-              {i === 2 ? "+75%" : i === 0 ? "-54%" : "-56%"}
-            </text>
-          </g>
-        );
-      })}
-      <line className="wire" x1="66" y1="126" x2="440" y2="126" />
-      <text className="lbl-sm" x="66" y="138">baseline</text>
-      <text className="lbl-sm" x="190" y="138">measure → keep or revert</text>
     </svg>
   );
 }
@@ -295,66 +146,103 @@ function RealtimeDiagram() {
   );
 }
 
-/* The same query, before and after the index it deserved. */
-function DataDiagram() {
+/* The model as a component inside a service, not a chatbot bolted onto one. */
+function AiBackendDiagram() {
+  const cx = 196, cy = 44, r = 26;
   return (
-    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Query and index">
-      <text className="lbl" x="8" y="18">table</text>
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-        <rect key={i} className={i === 5 ? "cell hit" : "cell"}
-              x={8 + i * 22} y={26} width="18" height="44" rx="1" />
+    <svg className="diagram" viewBox="0 0 520 168" role="img" aria-label="Agents and retrieval inside a service">
+      <text className="lbl-sm" x="8" y="30">request</text>
+      <line className="wire" x1="8" y1="44" x2="56" y2="44" />
+      <line className="flow" x1="8" y1="44" x2="56" y2="44" />
+      <rect className="node-fill" x="56" y="28" width="64" height="32" rx="2" />
+      <text className="lbl" x="88" y="48" textAnchor="middle">api</text>
+
+      <line className="wire" x1="120" y1="44" x2="170" y2="44" />
+      <circle className="wire" cx={cx} cy={cy} r={r} fill="none" />
+      <circle className="orbit" cx={cx} cy={cy} r={r} strokeDasharray="20 144" />
+      {[-90, 0, 90, 180].map((a) => {
+        const rad = (a * Math.PI) / 180;
+        return (
+          <circle key={a} className="node-fill pulse"
+                  cx={cx + r * Math.cos(rad)} cy={cy + r * Math.sin(rad)} r="4" />
+        );
+      })}
+      <text className="lbl" x={cx} y={cy + 4} textAnchor="middle">loop</text>
+
+      <line className="wire" x1="222" y1="44" x2="272" y2="44" />
+      <line className="flow" x1="222" y1="44" x2="272" y2="44" />
+      <rect className="node-fill" x="272" y="16" width="104" height="56" rx="2" />
+      <text className="lbl-sm" x="282" y="30">mcp tools</text>
+      {["read", "query", "write ✗"].map((t, i) => (
+        <g key={t}>
+          <rect className={i === 2 ? "cell cut" : "cell"} x="280" y={36 + i * 12} width="88" height="9" rx="1" />
+          <text className="lbl-sm" x="286" y={43 + i * 12}>{t}</text>
+        </g>
       ))}
-      <text className="lbl-sm" x="8" y="84">full scan</text>
 
-      <path className="wire" d="M120 92 L 120 106 L 250 106" fill="none" />
-      <text className="lbl" x="196" y="100">index</text>
+      {/* retrieval runs underneath and hands the loop its context */}
+      <text className="lbl-sm" x="8" y="104">corpus</text>
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} className={i === 2 ? "cell hit" : "cell"}
+              x={8 + (i % 2) * 16} y={112 + Math.floor(i / 2) * 16} width="13" height="13" rx="1" />
+      ))}
+      {[{ x: 62, t: "embed" }, { x: 150, t: "index" }, { x: 238, t: "rerank" }].map((b) => (
+        <g key={b.t}>
+          <rect className="node-fill" x={b.x} y={110} width={68} height={30} rx="2" />
+          <text className="lbl" x={b.x + 34} y={130} textAnchor="middle">{b.t}</text>
+        </g>
+      ))}
+      <line className="wire" x1="42" y1="125" x2="62" y2="125" />
+      <line className="wire" x1="130" y1="125" x2="150" y2="125" />
+      <line className="wire" x1="218" y1="125" x2="238" y2="125" />
+      <line className="flow" x1="42" y1="125" x2="306" y2="125" />
 
-      <text className="lbl-sm" x="266" y="34">before</text>
-      <rect className="cell cut" x="318" y="24" width="180" height="12" rx="1" />
-      <text className="lbl-sm" x="266" y="60">after</text>
-      <rect className="cell hit bar" x="318" y="50" width="126" height="12" rx="1" />
-      <text className="lbl" x="456" y="60">-30%</text>
-
-      <text className="lbl-sm" x="266" y="96">postgres · mongo · dynamo</text>
-      <text className="lbl-sm" x="266" y="112">shape the query, then the index</text>
+      <path className="wire" d="M306 110 C 306 84, 240 80, 210 70" fill="none" />
+      <text className="lbl" x="330" y="128">context</text>
+      <text className="lbl-sm" x="330" y="144">into the window</text>
+      <text className="lbl-sm" x="396" y="48">evidence,</text>
+      <text className="lbl-sm" x="396" y="62">not opinion</text>
     </svg>
   );
 }
 
-/* Commit to production, without anyone watching it happen. */
-function CloudDiagram() {
-  const stages = [
-    { x: 74, t: "test" },
-    { x: 158, t: "build" },
-    { x: 242, t: "scan" },
-  ];
+/* The same build, on a box you keep warm or a function you do not. */
+function CloudDeployDiagram() {
   return (
-    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Pipeline and environments">
-      <circle className="node-fill pulse" cx="26" cy="56" r="11" />
-      <text className="lbl-sm" x="8" y="84">commit</text>
-      <line className="wire" x1="37" y1="56" x2="440" y2="56" />
-      <line className="flow" x1="37" y1="56" x2="440" y2="56" />
+    <svg className="diagram" viewBox="0 0 520 168" role="img" aria-label="VM and serverless deployment">
+      <rect className="node" x="8" y="56" width="76" height="46" rx="2" />
+      <text className="lbl" x="46" y="76" textAnchor="middle">image</text>
+      <text className="lbl-sm" x="46" y="90" textAnchor="middle">docker</text>
 
-      {stages.map((st) => (
-        <g key={st.t}>
-          <rect className="node-fill" x={st.x} y={40} width={66} height={32} rx="2" />
-          <text className="lbl" x={st.x + 33} y={60} textAnchor="middle">{st.t}</text>
+      <line className="wire" x1="84" y1="72" x2="132" y2="40" />
+      <line className="flow" x1="84" y1="72" x2="132" y2="40" />
+      <rect className="node-fill" x="132" y="20" width="118" height="42" rx="2" />
+      <text className="lbl" x="142" y="38">vm</text>
+      <text className="lbl-sm" x="142" y="52">ec2 · long-lived · gpu</text>
+
+      <line className="wire" x1="84" y1="86" x2="132" y2="118" />
+      <line className="flow" x1="84" y1="86" x2="132" y2="118" />
+      <rect className="node-fill" x="132" y="98" width="118" height="42" rx="2" />
+      <text className="lbl" x="142" y="116">serverless</text>
+      <text className="lbl-sm" x="142" y="130">lambda · cloud run</text>
+
+      <text className="lbl-sm" x="258" y="34">steady load,</text>
+      <text className="lbl-sm" x="258" y="48">model stays resident</text>
+      <text className="lbl-sm" x="258" y="116">spiky load,</text>
+      <text className="lbl-sm" x="258" y="130">pay for the call</text>
+
+      <line className="wire" x1="250" y1="41" x2="392" y2="76" />
+      <line className="wire" x1="250" y1="119" x2="392" y2="88" />
+      <rect className="node" x="392" y="30" width="116" height="106" rx="2" />
+      <text className="lbl-sm" x="400" y="46">managed</text>
+      {["object store · s3", "queue · rabbit", "vector db", "secrets · iam"].map((t, i) => (
+        <g key={t}>
+          <rect className="cell" x="400" y={54 + i * 20} width="100" height="14" rx="1" />
+          <text className="lbl-sm" x="406" y={64 + i * 20}>{t}</text>
         </g>
       ))}
-
-      <rect className="node" x="326" y="34" width="72" height="44" rx="2" />
-      <text className="lbl" x="362" y="54" textAnchor="middle">image</text>
-      <text className="lbl-sm" x="362" y="68" textAnchor="middle">registry</text>
-
-      <line className="wire" x1="398" y1="56" x2="440" y2="26" />
-      <line className="wire" x1="398" y1="56" x2="440" y2="86" />
-      <rect className="cell" x="440" y="18" width="66" height="18" rx="2" />
-      <text className="lbl-sm" x="448" y="31">staging</text>
-      <rect className="cell hit" x="440" y="78" width="66" height="18" rx="2" />
-      <text className="lbl-sm" x="448" y="91">production</text>
-
-      <text className="lbl-sm" x="74" y="112">github actions · jenkins</text>
-      <text className="lbl-sm" x="242" y="112">docker · aws · cloud run</text>
+      <text className="lbl-sm" x="8" y="126">the choice is load shape</text>
+      <text className="lbl-sm" x="8" y="140">and cold start, not taste</text>
     </svg>
   );
 }
@@ -388,59 +276,34 @@ const SYSTEMS = [
   },
   {
     index: "03",
-    title: "data",
-    Diagram: DataDiagram,
+    title: "ai in the backend",
+    Diagram: AiBackendDiagram,
     copy: (
       <>
-        Relational where the shape is known, document where it is not. Most latency I have
-        removed came from the query and the index, not the language —{" "}
-        <b>one round of that cut response time by 30%</b>.
+        Not a chatbot bolted onto a product — the model as a component inside a service, with a
+        retrieval path feeding it and a tool surface bounding it. Chunking, embeddings, hybrid
+        search and reranking underneath; an agent loop and MCP tools on top.{" "}
+        <b>What you refuse to expose is as much of the design as what you do.</b>
       </>
     ),
-    tags: ["PostgreSQL", "MongoDB", "DynamoDB", "Firestore", "indexing", "query tuning"],
+    tags: ["RAG", "embeddings", "vector search", "rerank", "agents", "tool calling", "MCP"],
   },
   {
     index: "04",
-    title: "cloud & ci/cd",
-    Diagram: CloudDiagram,
+    title: "cloud & deployment",
+    Diagram: CloudDeployDiagram,
     copy: (
       <>
-        Containers, pipelines and the boring guarantees — tests that gate a merge, staging that
-        resembles production, and deploys nobody has to watch. EC2, S3, Lambda and MediaConvert
-        in anger; Cloud Run and Docker for everything since.
+        The same build on a VM you keep warm or a function you do not, and knowing which the
+        load shape deserves — a resident model on EC2, a spiky endpoint on Lambda or Cloud Run.
+        Plus the managed pieces around it: object storage, queues, a vector store, secrets, and
+        a pipeline that ships it without anyone watching.
       </>
     ),
-    tags: ["Docker", "AWS · EC2 · S3 · Lambda", "GCP · Cloud Run", "GitHub Actions", "Jenkins", "bash"],
+    tags: ["AWS · EC2 · S3 · Lambda", "GCP · Cloud Run", "Docker", "GitHub Actions", "Jenkins", "CI/CD"],
   },
   {
     index: "05",
-    title: "retrieval",
-    Diagram: RetrievalDiagram,
-    copy: (
-      <>
-        Chunking that respects structure, embeddings chosen for the corpus, and reranking —
-        because vector similarity alone confidently returns passages that are{" "}
-        <b>plausible and wrong</b>. The vector store is the easy part. The hard part is deciding
-        what has earned a place in the window.
-      </>
-    ),
-    tags: ["ingestion", "chunking", "embeddings", "vector search", "hybrid + rerank"],
-  },
-  {
-    index: "06",
-    title: "agents & tools",
-    Diagram: AgentDiagram,
-    copy: (
-      <>
-        A loop, not a personality. The model proposes, tools execute, results return as
-        evidence. Everything interesting lives in the tool surface: what you expose, what you{" "}
-        <b>refuse</b> to expose, and whether a tool can tell the model when it applies.
-      </>
-    ),
-    tags: ["tool calling", "multi-step agents", "MCP servers", "orchestration", "failure paths"],
-  },
-  {
-    index: "07",
     title: "context",
     Diagram: ContextDiagram,
     copy: (
@@ -453,33 +316,17 @@ const SYSTEMS = [
     tags: ["context engineering", "prioritisation", "compaction", "code maps", "indexing"],
   },
   {
-    index: "08",
-    title: "optimisation",
-    Diagram: EvalDiagram,
-    copy: (
-      <>
-        p95 latency, cost per thousand calls, and whether the answers actually got better. Same
-        discipline either side of the stack: I build the harness before the optimisation,
-        because <b>a claim without a number is a vibe</b>.
-      </>
-    ),
-    tags: ["eval harnesses", "caching", "batching", "model selection", "LoRA / QLoRA", "profiling"],
-  },
-  {
-    index: "09",
+    index: "06",
     title: "determinism",
-    wide: true,
     Diagram: CoreDiagram,
     copy: (
       <>
         The thread through all of it. Put the model at the edge and keep the decision in code: a
         classifier that answers differently on identical input is not a gate, and its input is
-        attacker-controlled anyway. <b>The model explains; it never decides.</b> It is also why
-        both my tools return typed results a caller can test, rather than prose a caller has to
-        trust.
+        attacker-controlled anyway. <b>The model explains; it never decides.</b>
       </>
     ),
-    tags: ["typed results", "policy over scoring", "reproducibility", "local + frontier models"],
+    tags: ["typed results", "policy over scoring", "eval harnesses", "reproducibility"],
   },
 ];
 
@@ -514,10 +361,9 @@ export default function Systems() {
         <HeadingText text={"what i can do"} />
       </div>
       <p className="systems-intro cursor-scale small">
-        Backends, realtime systems and cloud infrastructure first — then retrieval, agents and
-        the tooling around them. The top half of this list is what makes the bottom half survive
-        production: an agent is only ever as good as the service, the data layer and the pipeline
-        underneath it.
+        Backend and AI as one system, not two skill sets. Services and realtime carry it,
+        retrieval and agents run inside it, and the cloud, context and determinism decisions are
+        what keep it honest once real traffic arrives.
       </p>
       <div className="systems-grid">
         {SYSTEMS.map(({ index, title, Diagram, copy, tags, wide }) => (

@@ -45,8 +45,8 @@ export default function Contact() {
         <HeadingText text={"get in touch"} />
       </div>
       <p className="contact-note cursor-scale small">
-        Open to AI engineering roles — LLM applications, retrieval, agents and developer
-        tooling. The fastest way to judge my work is to read the two repos.
+        Open to backend and AI engineering roles — services, retrieval, agents and the
+        infrastructure they run on. The fastest way to judge my work is to read the two repos.
       </p>
       <form className="contact-form row" onSubmit={handleSubmit}>
         <TextInput
