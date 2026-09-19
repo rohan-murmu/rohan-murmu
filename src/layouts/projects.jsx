@@ -42,8 +42,9 @@ const Projects = () => {
         <HeadingText text={"my projects"} />
       </div>
       <p className="projects-intro cursor-scale small">
-        Two tools, both infrastructure for coding agents. One holds the architecture an agent
-        keeps drifting away from. The other finds the edit that broke the build.
+        Two I took all the way through — designed, built, documented, benchmarked and deployed.
+        They are examples rather than the boundary; both happen to be infrastructure for coding
+        agents, which is where my attention has been lately.
       </p>
 
       <div className="projects-layout">

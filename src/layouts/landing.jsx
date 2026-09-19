@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useLayoutEffect } from "react";
 import { gsap, TextPlugin } from "gsap/all";
 import Header from "./header";
+import HeroBg from "../components/custom/hero-bg";
 import "../styles/landing.css";
 
 gsap.registerPlugin(TextPlugin);
@@ -10,7 +11,7 @@ export default function Landing() {
   const introRef = useRef(null);
   const yearRef = useRef(null);
   const introText =
-    "I’m an AI engineer. I build the layer between language models and real systems — retrieval that returns the right thing, agents with a tool surface worth trusting, and a deterministic core underneath that the model is never allowed to overrule. Currently building open-source infrastructure for coding agents.";
+    "I’m an AI engineer. I design, build, deploy and optimise systems around language models — retrieval, agents, tool surfaces, context, evaluation. Backend and infrastructure by background, so what I build ships and keeps running rather than demoing well once.";
   const yearText = "Folio 2026";
 
   useLayoutEffect(() => {
@@ -64,6 +65,7 @@ export default function Landing() {
     <div>
       <Header />
       <div className="landing-container">
+        <HeroBg />
         <div ref={landingTextRefs}>
           {["hey", "this is", "rohan"].map((text, index) => (
             <div key={index} className="landing-text cursor-scale">
