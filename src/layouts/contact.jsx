@@ -46,7 +46,7 @@ export default function Contact() {
       </div>
       <p className="contact-note cursor-scale small">
         Open to backend and AI engineering roles — services, retrieval, agents and the
-        infrastructure they run on. The fastest way to judge my work is to read the two repos.
+        infrastructure they run on. The fastest way to judge my work is to read the code.
       </p>
       <form className="contact-form row" onSubmit={handleSubmit}>
         <TextInput

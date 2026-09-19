@@ -213,3 +213,109 @@
 @media (prefers-reduced-motion: reduce) {
   .project { opacity: 1 !important; transform: none !important; }
 }
+
+/* ---------- smaller projects: source only ---------- */
+.small-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 64px auto 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(181, 181, 181, 0.12);
+}
+
+.small-head h3 {
+  margin: 0;
+  font-size: clamp(16px, 1.8vw, 1.5em);
+  text-transform: uppercase;
+  color: rgba(181, 181, 181, 0.9);
+}
+
+.small-head span {
+  font-family: "Barlow", sans-serif;
+  font-size: clamp(10px, 1vw, 0.78em);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(181, 181, 181, 0.3);
+}
+
+.small-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.small {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 20px 18px;
+  border: 1px solid rgba(181, 181, 181, 0.18);
+  border-radius: 2px;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.small:hover {
+  border-color: rgba(181, 181, 181, 0.5);
+  transform: translateY(-3px);
+}
+
+.small-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: rgba(181, 181, 181, 0.35);
+}
+
+.small-top h4 {
+  margin: 0;
+  font-size: clamp(14px, 1.35vw, 1.1em);
+  text-transform: uppercase;
+  color: rgba(181, 181, 181, 0.85);
+  transition: color 0.3s ease;
+}
+
+.small:hover .small-top h4,
+.small:hover .small-top { color: #fff; }
+
+.small p {
+  margin: 0;
+  font-family: "Barlow", sans-serif;
+  font-size: clamp(11.5px, 1.05vw, 0.85em);
+  line-height: 1.7;
+  color: rgba(181, 181, 181, 0.52);
+}
+
+.small-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.small-tags span {
+  font-family: "Barlow", sans-serif;
+  font-size: clamp(8.5px, 0.8vw, 0.66em);
+  letter-spacing: 0.04em;
+  color: rgba(181, 181, 181, 0.4);
+  border: 1px solid rgba(181, 181, 181, 0.14);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .small-layout { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media only screen and (max-width: 560px) {
+  .small-layout { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .small { opacity: 1 !important; transform: none !important; }
+}

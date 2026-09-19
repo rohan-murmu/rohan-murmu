@@ -7,7 +7,7 @@ import { HeadingText } from "../components/text";
 
 import "../styles/card-layout.css";
 
-import { projectsData } from "../data/projects-data.jsx";
+import { projectsData, smallProjects } from "../data/projects-data.jsx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,7 +19,7 @@ const Projects = () => {
     if (reduced) return;
 
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".project").forEach((panel) => {
+      gsap.utils.toArray(".project, .small").forEach((panel) => {
         gsap.fromTo(
           panel,
           { y: 50, opacity: 0 },
@@ -88,6 +88,28 @@ const Projects = () => {
               </ul>
             </div>
           </article>
+        ))}
+      </div>
+
+      <div className="small-head">
+        <h3>also built</h3>
+        <span>source only — not deployed</span>
+      </div>
+      <div className="small-layout">
+        {smallProjects.map((sp) => (
+          <a className="small cursor-scale small" key={sp.name} href={sp.repo}
+             target="_blank" rel="noreferrer">
+            <div className="small-top">
+              <h4>{sp.name}</h4>
+              <FaGithub size={15} />
+            </div>
+            <p>{sp.line}</p>
+            <div className="small-tags">
+              {sp.tags.map((t) => (
+                <span key={t}>{t}</span>
+              ))}
+            </div>
+          </a>
         ))}
       </div>
     </div>
