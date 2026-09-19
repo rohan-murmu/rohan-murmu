@@ -35,19 +35,19 @@ export default function HeroBg() {
             key={i}
             x1={NODES[a][0]} y1={NODES[a][1]}
             x2={NODES[b][0]} y2={NODES[b][1]}
+            pathLength="1"
             className="hero-edge"
-            style={{ animationDelay: `${(i % 9) * 0.7}s` }}
+            style={{ "--d": `${0.35 + i * 0.035}s`, "--b": `${(i % 9) * 0.7}s` }}
           />
         ))}
         {NODES.map(([x, y], i) => (
           <circle
             key={i} cx={x} cy={y} r={i % 7 === 0 ? 0.85 : 0.45}
             className={`hero-node${i % 7 === 0 ? " lit" : ""}`}
-            style={{ animationDelay: `${(i % 6) * 0.9}s` }}
+            style={{ "--d": `${0.15 + i * 0.045}s`, "--b": `${(i % 6) * 0.9}s` }}
           />
         ))}
       </svg>
-      <div className="hero-scan" />
     </div>
   );
 }

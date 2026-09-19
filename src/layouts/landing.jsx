@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useLayoutEffect } from "react";
+import React, { useRef, useLayoutEffect } from "react";
 import { gsap, TextPlugin } from "gsap/all";
 import Header from "./header";
 import HeroBg from "../components/custom/hero-bg";
@@ -6,68 +6,95 @@ import "../styles/landing.css";
 
 gsap.registerPlugin(TextPlugin);
 
+const LINES = ["hey", "this is", "rohan"];
+const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\<>[]{}#*+=-_%$&";
+
 export default function Landing() {
-  const landingTextRefs = useRef([]);
+  const landingTextRefs = useRef(null);
   const introRef = useRef(null);
   const yearRef = useRef(null);
+
   const introText =
     "I’m an AI engineer. I design, build, deploy and optimise systems around language models — retrieval, agents, tool surfaces, context, evaluation. Backend and infrastructure by background, so what I build ships and keeps running rather than demoing well once.";
   const yearText = "Folio 2026";
 
   useLayoutEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lines = Array.from(landingTextRefs.current?.children ?? []);
+
     if (reduced) {
+      lines.forEach((el, i) => {
+        el.textContent = LINES[i];
+        el.classList.add("settled");
+      });
       if (introRef.current) introRef.current.textContent = introText;
       if (yearRef.current) yearRef.current.textContent = yearText;
       return;
     }
 
-    let ctx = gsap.context(() => {
-      const elements = landingTextRefs.current?.children;
-      if (!elements) return;
+    /* Each line resolves out of noise, left to right, the way the graph behind it draws
+       itself in. Characters are swapped on a timer rather than every frame, because at
+       60fps the churn reads as static instead of as something assembling. */
+    const frames = [];
+    lines.forEach((el, i) => {
+      const text = LINES[i];
+      const begin = performance.now() + 260 + i * 240;
+      const duration = 620 + text.length * 55;
+      let lastSwap = 0;
+      let noise = "";
+      el.classList.add("settling");
 
-      gsap.fromTo(
-        elements,
-        { y: 100, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.05,
-          duration: 2,
-          delay: 0.5,
-          ease: "power4.out",
+      const tick = (now) => {
+        if (now < begin) {
+          frames[i] = requestAnimationFrame(tick);
+          return;
         }
-      );
+        const p = Math.min(1, (now - begin) / duration);
+        const locked = Math.floor(p * text.length);
 
+        if (now - lastSwap > 55 || !noise) {
+          lastSwap = now;
+          noise = "";
+          for (let c = 0; c < text.length; c++) {
+            noise += text[c] === " " ? " " : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+          }
+        }
+        el.textContent = text.slice(0, locked) + noise.slice(locked);
+
+        if (p < 1) {
+          frames[i] = requestAnimationFrame(tick);
+        } else {
+          el.textContent = text;
+          el.classList.remove("settling");
+          el.classList.add("settled");
+        }
+      };
+      frames[i] = requestAnimationFrame(tick);
+    });
+
+    /* The supporting copy types in once the name has landed. */
+    const ctx = gsap.context(() => {
       if (introRef.current) {
-        gsap.to(introRef.current, {
-          text: introText,
-          duration: 2,
-          ease: "power4.inOut",
-          delay: 0.5,
-        });
+        gsap.to(introRef.current, { text: introText, duration: 1.8, ease: "none", delay: 1.5 });
       }
-
       if (yearRef.current) {
-        gsap.to(yearRef.current, {
-          text: yearText,
-          duration: 2,
-          ease: "power4.inOut",
-          delay: 0.5,
-        });
+        gsap.to(yearRef.current, { text: yearText, duration: 1, ease: "none", delay: 2.2 });
       }
     });
 
-    return () => ctx.revert();
+    return () => {
+      frames.forEach((f) => cancelAnimationFrame(f));
+      ctx.revert();
+    };
   }, []);
 
   return (
-    <div>
+    <div className="landing-root">
       <Header />
       <div className="landing-container">
         <HeroBg />
         <div ref={landingTextRefs}>
-          {["hey", "this is", "rohan"].map((text, index) => (
+          {LINES.map((text, index) => (
             <div key={index} className="landing-text cursor-scale">
               {text}
             </div>

@@ -1,4 +1,5 @@
 .systems-container {
+  box-sizing: border-box;
   position: relative;
   min-height: 100vh;
   overflow: hidden;
