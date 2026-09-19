@@ -226,3 +226,4 @@
 @media (prefers-reduced-motion: reduce) {
   .system { opacity: 1 !important; transform: none !important; }
 }
+.system.wide { grid-column: 1 / -1; }

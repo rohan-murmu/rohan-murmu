@@ -195,42 +195,6 @@ function CoreDiagram() {
 }
 
 
-/* Delivery: the same system has to run somewhere, at a price, at a latency. */
-function DeliveryDiagram() {
-  return (
-    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Serving and deployment">
-      <rect className="node-fill" x="8" y="20" width="92" height="34" rx="2" />
-      <text className="lbl-sm" x="18" y="34">local</text>
-      <text className="lbl-sm" x="18" y="46">ollama · small</text>
-      <rect className="node-fill" x="8" y="66" width="92" height="34" rx="2" />
-      <text className="lbl-sm" x="18" y="80">hosted</text>
-      <text className="lbl-sm" x="18" y="92">frontier · large</text>
-
-      <line className="wire" x1="100" y1="37" x2="140" y2="55" />
-      <line className="wire" x1="100" y1="83" x2="140" y2="65" />
-      <rect className="node-fill pulse" x="140" y="44" width="70" height="32" rx="2" />
-      <text className="lbl" x="175" y="64" textAnchor="middle">route</text>
-      <text className="lbl-sm" x="175" y="90" textAnchor="middle">by cost + risk</text>
-
-      <line className="wire" x1="210" y1="60" x2="250" y2="60" />
-      <line className="flow" x1="210" y1="60" x2="250" y2="60" />
-      <rect className="node" x="250" y="34" width="86" height="52" rx="2" />
-      <text className="lbl" x="293" y="56" textAnchor="middle">container</text>
-      <text className="lbl-sm" x="293" y="72" textAnchor="middle">docker</text>
-
-      <line className="wire" x1="336" y1="60" x2="376" y2="60" />
-      <line className="flow" x1="336" y1="60" x2="376" y2="60" />
-      <rect className="node-fill" x="376" y="34" width="86" height="52" rx="2" />
-      <text className="lbl" x="419" y="56" textAnchor="middle">service</text>
-      <text className="lbl-sm" x="419" y="72" textAnchor="middle">cloud run</text>
-
-      <text className="lbl-sm" x="250" y="112">p95 latency</text>
-      <text className="lbl-sm" x="330" y="112">· cost / 1k</text>
-      <text className="lbl-sm" x="404" y="112">· fallback</text>
-    </svg>
-  );
-}
-
 /* Optimisation: a claim without a number is a vibe. */
 function EvalDiagram() {
   const rows = [
@@ -260,24 +224,211 @@ function EvalDiagram() {
   );
 }
 
+
+/* Services that fail independently, and a broker that lets them. */
+function BackendDiagram() {
+  return (
+    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Service architecture">
+      <rect className="node-fill" x="8" y="16" width="84" height="32" rx="2" />
+      <text className="lbl-sm" x="20" y="36">api gateway</text>
+      <rect className="node-fill" x="8" y="74" width="84" height="32" rx="2" />
+      <text className="lbl-sm" x="20" y="94">orders</text>
+
+      <line className="wire" x1="92" y1="32" x2="128" y2="50" />
+      <line className="wire" x1="92" y1="90" x2="128" y2="72" />
+      <line className="flow" x1="92" y1="32" x2="128" y2="50" />
+
+      <rect className="node pulse" x="128" y="12" width="42" height="110" rx="3" />
+      <text className="lbl" x="149" y="66" textAnchor="middle" transform="rotate(-90 149 66)">queue</text>
+
+      <line className="wire" x1="170" y1="46" x2="208" y2="32" />
+      <line className="wire" x1="170" y1="84" x2="208" y2="90" />
+      <line className="flow" x1="170" y1="46" x2="208" y2="32" />
+
+      <rect className="node-fill" x="208" y="16" width="84" height="32" rx="2" />
+      <text className="lbl-sm" x="220" y="36">billing</text>
+      <rect className="node-fill" x="208" y="74" width="84" height="32" rx="2" />
+      <text className="lbl-sm" x="220" y="94">media · ffmpeg</text>
+
+      {/* the half that matters: undoing a step that already succeeded */}
+      <path className="wire" d="M250 48 C 250 62, 150 132, 50 116 L 50 108"
+            strokeDasharray="4 4" fill="none" />
+      <text className="lbl-sm" x="150" y="134" textAnchor="middle">compensate</text>
+
+      <text className="lbl" x="310" y="40">saga</text>
+      <text className="lbl-sm" x="310" y="56">each step has an undo</text>
+      <text className="lbl-sm" x="310" y="76">retries · dead letters</text>
+      <text className="lbl-sm" x="310" y="92">idempotent handlers</text>
+    </svg>
+  );
+}
+
+/* One connection per client, one fan-out per event. */
+function RealtimeDiagram() {
+  return (
+    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Realtime fan-out">
+      {[26, 62, 98].map((y, i) => (
+        <g key={y}>
+          <rect className="cell" x="10" y={y} width="30" height="16" rx="2" />
+          <line className="wire" x1="40" y1={y + 8} x2="150" y2="66" />
+          {i === 1 && <line className="flow" x1="40" y1={y + 8} x2="150" y2="66" />}
+        </g>
+      ))}
+      <text className="lbl-sm" x="10" y="132">clients</text>
+
+      <rect className="node-fill pulse" x="150" y="40" width="96" height="52" rx="3" />
+      <text className="lbl" x="198" y="62" textAnchor="middle">hub</text>
+      <text className="lbl-sm" x="198" y="78" textAnchor="middle">rooms · presence</text>
+
+      {[14, 40, 66, 92, 118].map((y, i) => (
+        <g key={y}>
+          <line className="wire" x1="246" y1="66" x2="360" y2={y + 8} />
+          {(i === 0 || i === 3) && <line className="flow" x1="246" y1="66" x2="360" y2={y + 8} />}
+          <rect className={i % 2 ? "cell" : "cell hit"} x="360" y={y} width="30" height="16" rx="2" />
+        </g>
+      ))}
+
+      <text className="lbl" x="404" y="52">fan-out</text>
+      <text className="lbl-sm" x="404" y="70">websockets</text>
+      <text className="lbl-sm" x="404" y="86">pub / sub</text>
+    </svg>
+  );
+}
+
+/* The same query, before and after the index it deserved. */
+function DataDiagram() {
+  return (
+    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Query and index">
+      <text className="lbl" x="8" y="18">table</text>
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <rect key={i} className={i === 5 ? "cell hit" : "cell"}
+              x={8 + i * 22} y={26} width="18" height="44" rx="1" />
+      ))}
+      <text className="lbl-sm" x="8" y="84">full scan</text>
+
+      <path className="wire" d="M120 92 L 120 106 L 250 106" fill="none" />
+      <text className="lbl" x="196" y="100">index</text>
+
+      <text className="lbl-sm" x="266" y="34">before</text>
+      <rect className="cell cut" x="318" y="24" width="180" height="12" rx="1" />
+      <text className="lbl-sm" x="266" y="60">after</text>
+      <rect className="cell hit bar" x="318" y="50" width="126" height="12" rx="1" />
+      <text className="lbl" x="456" y="60">-30%</text>
+
+      <text className="lbl-sm" x="266" y="96">postgres · mongo · dynamo</text>
+      <text className="lbl-sm" x="266" y="112">shape the query, then the index</text>
+    </svg>
+  );
+}
+
+/* Commit to production, without anyone watching it happen. */
+function CloudDiagram() {
+  const stages = [
+    { x: 74, t: "test" },
+    { x: 158, t: "build" },
+    { x: 242, t: "scan" },
+  ];
+  return (
+    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Pipeline and environments">
+      <circle className="node-fill pulse" cx="26" cy="56" r="11" />
+      <text className="lbl-sm" x="8" y="84">commit</text>
+      <line className="wire" x1="37" y1="56" x2="440" y2="56" />
+      <line className="flow" x1="37" y1="56" x2="440" y2="56" />
+
+      {stages.map((st) => (
+        <g key={st.t}>
+          <rect className="node-fill" x={st.x} y={40} width={66} height={32} rx="2" />
+          <text className="lbl" x={st.x + 33} y={60} textAnchor="middle">{st.t}</text>
+        </g>
+      ))}
+
+      <rect className="node" x="326" y="34" width="72" height="44" rx="2" />
+      <text className="lbl" x="362" y="54" textAnchor="middle">image</text>
+      <text className="lbl-sm" x="362" y="68" textAnchor="middle">registry</text>
+
+      <line className="wire" x1="398" y1="56" x2="440" y2="26" />
+      <line className="wire" x1="398" y1="56" x2="440" y2="86" />
+      <rect className="cell" x="440" y="18" width="66" height="18" rx="2" />
+      <text className="lbl-sm" x="448" y="31">staging</text>
+      <rect className="cell hit" x="440" y="78" width="66" height="18" rx="2" />
+      <text className="lbl-sm" x="448" y="91">production</text>
+
+      <text className="lbl-sm" x="74" y="112">github actions · jenkins</text>
+      <text className="lbl-sm" x="242" y="112">docker · aws · cloud run</text>
+    </svg>
+  );
+}
+
 const SYSTEMS = [
   {
     index: "01",
+    title: "backend systems",
+    Diagram: BackendDiagram,
+    copy: (
+      <>
+        Services split along failure lines, talking through a broker rather than through each
+        other. I have shipped a saga-based flow on RabbitMQ where <b>every step has an undo</b>,
+        because the interesting half of distributed work is not the happy path.
+      </>
+    ),
+    tags: ["Node · Express · Nest", "Go", "REST APIs", "microservices", "RabbitMQ", "saga pattern"],
+  },
+  {
+    index: "02",
+    title: "realtime",
+    Diagram: RealtimeDiagram,
+    copy: (
+      <>
+        Connections are cheap to open and expensive to get right — rooms, presence, reconnect,
+        and the fan-out that decides whether a hundred users feel instant or feel broken. Built
+        a collaborative canvas and a multiplayer backend on this.
+      </>
+    ),
+    tags: ["WebSockets", "Socket.IO", "WebRTC", "pub / sub", "Redis", "message queues"],
+  },
+  {
+    index: "03",
+    title: "data",
+    Diagram: DataDiagram,
+    copy: (
+      <>
+        Relational where the shape is known, document where it is not. Most latency I have
+        removed came from the query and the index, not the language —{" "}
+        <b>one round of that cut response time by 30%</b>.
+      </>
+    ),
+    tags: ["PostgreSQL", "MongoDB", "DynamoDB", "Firestore", "indexing", "query tuning"],
+  },
+  {
+    index: "04",
+    title: "cloud & ci/cd",
+    Diagram: CloudDiagram,
+    copy: (
+      <>
+        Containers, pipelines and the boring guarantees — tests that gate a merge, staging that
+        resembles production, and deploys nobody has to watch. EC2, S3, Lambda and MediaConvert
+        in anger; Cloud Run and Docker for everything since.
+      </>
+    ),
+    tags: ["Docker", "AWS · EC2 · S3 · Lambda", "GCP · Cloud Run", "GitHub Actions", "Jenkins", "bash"],
+  },
+  {
+    index: "05",
     title: "retrieval",
     Diagram: RetrievalDiagram,
     copy: (
       <>
         Chunking that respects structure, embeddings chosen for the corpus, and reranking —
         because vector similarity alone confidently returns passages that are{" "}
-        <b>plausible and wrong</b>. The vector store is the easy part. The hard part is
-        deciding what has earned a place in the window.
+        <b>plausible and wrong</b>. The vector store is the easy part. The hard part is deciding
+        what has earned a place in the window.
       </>
     ),
-    tags: ["ingestion", "chunking", "embeddings", "vector search", "hybrid + rerank", "semantic metadata"],
+    tags: ["ingestion", "chunking", "embeddings", "vector search", "hybrid + rerank"],
   },
   {
-    index: "02",
-    title: "agents",
+    index: "06",
+    title: "agents & tools",
     Diagram: AgentDiagram,
     copy: (
       <>
@@ -289,7 +440,7 @@ const SYSTEMS = [
     tags: ["tool calling", "multi-step agents", "MCP servers", "orchestration", "failure paths"],
   },
   {
-    index: "03",
+    index: "07",
     title: "context",
     Diagram: ContextDiagram,
     copy: (
@@ -299,46 +450,36 @@ const SYSTEMS = [
         it out. Codebase indexes and code maps exist to spend that budget well.
       </>
     ),
-    tags: ["context engineering", "prioritisation", "compaction", "code maps", "codebase indexing"],
+    tags: ["context engineering", "prioritisation", "compaction", "code maps", "indexing"],
   },
   {
-    index: "04",
-    title: "delivery",
-    Diagram: DeliveryDiagram,
-    copy: (
-      <>
-        A model that only runs on my laptop is a demo. Containers, cloud services, routing
-        between a small local model and a frontier one by cost and risk, and a fallback for
-        when the good one is down. <b>Shipping it is half the work.</b>
-      </>
-    ),
-    tags: ["Docker", "Cloud Run / GCP", "Ollama · local models", "routing + fallback", "streaming"],
-  },
-  {
-    index: "05",
+    index: "08",
     title: "optimisation",
     Diagram: EvalDiagram,
     copy: (
       <>
-        Latency, cost per thousand calls, and whether the answers actually got better. I build
-        the harness before the optimisation, because <b>a claim without a number is a vibe</b> —
-        and half of what looks like a model problem is a retrieval or budget problem.
+        p95 latency, cost per thousand calls, and whether the answers actually got better. Same
+        discipline either side of the stack: I build the harness before the optimisation,
+        because <b>a claim without a number is a vibe</b>.
       </>
     ),
-    tags: ["eval harnesses", "caching", "batching", "model selection", "LoRA / QLoRA", "cost + latency"],
+    tags: ["eval harnesses", "caching", "batching", "model selection", "LoRA / QLoRA", "profiling"],
   },
   {
-    index: "06",
+    index: "09",
     title: "determinism",
+    wide: true,
     Diagram: CoreDiagram,
     copy: (
       <>
-        Both my tools put the model at the edge and keep the decision in code. A classifier
-        that answers differently on identical input is not a gate — and its input is
-        attacker-controlled anyway. <b>The model explains; it never decides.</b>
+        The thread through all of it. Put the model at the edge and keep the decision in code: a
+        classifier that answers differently on identical input is not a gate, and its input is
+        attacker-controlled anyway. <b>The model explains; it never decides.</b> It is also why
+        both my tools return typed results a caller can test, rather than prose a caller has to
+        trust.
       </>
     ),
-    tags: ["typed results", "policy over scoring", "evaluation harnesses", "local + frontier models"],
+    tags: ["typed results", "policy over scoring", "reproducibility", "local + frontier models"],
   },
 ];
 
@@ -373,13 +514,14 @@ export default function Systems() {
         <HeadingText text={"what i can do"} />
       </div>
       <p className="systems-intro cursor-scale small">
-        I work across the whole path — retrieval and agent design, the context and tool surfaces
-        they run on, then deployment, cost and evaluation once it has to survive real traffic.
-        Local models and frontier models, and the judgement about which one a job deserves.
+        Backends, realtime systems and cloud infrastructure first — then retrieval, agents and
+        the tooling around them. The top half of this list is what makes the bottom half survive
+        production: an agent is only ever as good as the service, the data layer and the pipeline
+        underneath it.
       </p>
       <div className="systems-grid">
-        {SYSTEMS.map(({ index, title, Diagram, copy, tags }) => (
-          <div className="system" key={index}>
+        {SYSTEMS.map(({ index, title, Diagram, copy, tags, wide }) => (
+          <div className={`system${wide ? " wide" : ""}`} key={index}>
             <div className="system-head">
               <h2 className="cursor-scale">{title}</h2>
               <span className="system-index">{index}</span>

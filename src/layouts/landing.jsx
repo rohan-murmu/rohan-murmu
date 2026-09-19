@@ -15,7 +15,7 @@ export default function Landing() {
   const yearRef = useRef(null);
 
   const introText =
-    "I’m an AI engineer. I design, build, deploy and optimise systems around language models — retrieval, agents, tool surfaces, context, evaluation. Backend and infrastructure by background, so what I build ships and keeps running rather than demoing well once.";
+    "I’m a full stack engineer who builds AI systems. Backends, realtime services and cloud infrastructure first — then retrieval, agents and the tooling around them. The engineering underneath is what makes the AI part survive production rather than demo well once.";
   const yearText = "Folio 2026";
 
   useLayoutEffect(() => {
