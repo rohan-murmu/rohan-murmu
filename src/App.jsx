@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import CustomCursor from "./components/custom/cursor";
 import Landing from "./layouts/landing";
-import Skills from "./layouts/skills";
+import Systems from "./layouts/systems";
 import Projects from "./layouts/projects";
 import Contact from "./layouts/contact";
 
@@ -29,7 +29,7 @@ function App() {
       <CustomCursor />
       <div className="noise" />
       <Landing />
-      <Skills />
+      <Systems />
       <Projects />
       <Contact />
     </React.Fragment>

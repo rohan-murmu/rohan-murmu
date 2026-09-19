@@ -7,3 +7,13 @@
   min-height: 100vh;
   flex-direction: column;
 }
+
+.contact-note {
+  max-width: 600px;
+  margin: 0 auto 44px;
+  text-align: center;
+  font-family: "Barlow", sans-serif;
+  font-size: clamp(13px, 1.3vw, 1.05em);
+  line-height: 1.7;
+  color: rgba(181, 181, 181, 0.55);
+}

@@ -10,10 +10,17 @@ export default function Landing() {
   const introRef = useRef(null);
   const yearRef = useRef(null);
   const introText =
-    "I’m a Full Stack developer with a passion for UI/UX design, skilled in building and deploying user-friendly, scalable applications. I have experience in both frontend and backend development, as well as in DevOps and cloud technologies for managing deployments and infrastructure.";
-  const yearText = "Folio 2025";
+    "I’m an AI engineer. I build the layer between language models and real systems — retrieval that returns the right thing, agents with a tool surface worth trusting, and a deterministic core underneath that the model is never allowed to overrule. Currently building open-source infrastructure for coding agents.";
+  const yearText = "Folio 2026";
 
   useLayoutEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      if (introRef.current) introRef.current.textContent = introText;
+      if (yearRef.current) yearRef.current.textContent = yearText;
+      return;
+    }
+
     let ctx = gsap.context(() => {
       const elements = landingTextRefs.current?.children;
       if (!elements) return;

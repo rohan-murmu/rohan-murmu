@@ -1,0 +1,227 @@
+.systems-container {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 50px;
+}
+
+.systems-intro {
+  max-width: 680px;
+  margin: 0 auto 60px;
+  text-align: center;
+  font-family: "Barlow", sans-serif;
+  font-size: clamp(13px, 1.3vw, 1.05em);
+  line-height: 1.7;
+  color: rgba(181, 181, 181, 0.55);
+}
+
+.systems-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.system {
+  border: 1px solid rgba(181, 181, 181, 0.2);
+  border-radius: 2px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: border-color 0.3s ease;
+}
+
+.system:hover {
+  border-color: rgba(181, 181, 181, 0.5);
+}
+
+.system-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.system-head h2 {
+  margin: 0;
+  font-size: clamp(18px, 2vw, 1.7em);
+  text-transform: uppercase;
+  color: rgba(181, 181, 181, 0.9);
+  transition: color 0.3s ease;
+}
+
+.system:hover .system-head h2 {
+  color: #fff;
+}
+
+.system-index {
+  font-family: "Barlow", sans-serif;
+  font-size: clamp(10px, 1vw, 0.8em);
+  color: rgba(181, 181, 181, 0.3);
+  letter-spacing: 0.2em;
+}
+
+.system-copy {
+  font-family: "Barlow", sans-serif;
+  font-size: clamp(12px, 1.15vw, 0.95em);
+  line-height: 1.75;
+  color: rgba(181, 181, 181, 0.6);
+  margin: 0;
+}
+
+.system-copy b {
+  color: rgba(181, 181, 181, 0.95);
+  font-weight: 500;
+}
+
+.system-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.system-tags span {
+  font-family: "Barlow", sans-serif;
+  font-size: clamp(9px, 0.85vw, 0.72em);
+  letter-spacing: 0.04em;
+  color: rgba(181, 181, 181, 0.45);
+  border: 1px solid rgba(181, 181, 181, 0.16);
+  border-radius: 999px;
+  padding: 4px 11px;
+  transition: all 0.25s ease;
+}
+
+.system:hover .system-tags span {
+  color: rgba(181, 181, 181, 0.75);
+  border-color: rgba(181, 181, 181, 0.3);
+}
+
+/* ---------- diagram canvas ---------- */
+.diagram {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.diagram .wire {
+  fill: none;
+  stroke: rgba(181, 181, 181, 0.22);
+  stroke-width: 1;
+}
+
+.diagram .flow {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.75);
+  stroke-width: 1.2;
+  stroke-dasharray: 5 90;
+  animation: dash 4s linear infinite;
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: -95; }
+}
+
+.diagram .node {
+  fill: none;
+  stroke: rgba(181, 181, 181, 0.4);
+  stroke-width: 1;
+}
+
+.diagram .node-fill {
+  fill: rgba(181, 181, 181, 0.07);
+  stroke: rgba(181, 181, 181, 0.4);
+  stroke-width: 1;
+}
+
+.diagram .lbl {
+  font-family: "Barlow", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  fill: rgba(181, 181, 181, 0.55);
+  text-transform: uppercase;
+}
+
+.diagram .lbl-sm {
+  font-family: "Barlow", sans-serif;
+  font-size: 8.5px;
+  fill: rgba(181, 181, 181, 0.35);
+}
+
+.system:hover .diagram .lbl { fill: rgba(181, 181, 181, 0.85); }
+
+/* pulsing emphasis, staggered per element */
+.diagram .pulse { animation: pulse 3.2s ease-in-out infinite; }
+.diagram .pulse:nth-of-type(2n) { animation-delay: 0.4s; }
+.diagram .pulse:nth-of-type(3n) { animation-delay: 0.8s; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+/* the corpus grid in the retrieval diagram */
+.diagram .cell { fill: rgba(181, 181, 181, 0.16); }
+.diagram .cell.hit {
+  fill: rgba(255, 255, 255, 0.85);
+  animation: hit 4s ease-in-out infinite;
+}
+@keyframes hit {
+  0%, 55%, 100% { fill: rgba(181, 181, 181, 0.16); }
+  70%, 85%      { fill: rgba(255, 255, 255, 0.85); }
+}
+
+/* the agent loop's travelling head */
+.diagram .orbit {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.8);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  animation: orbit 5s linear infinite;
+}
+@keyframes orbit { to { stroke-dashoffset: -440; } }
+
+/* context budget bars */
+.diagram .bar { animation: fill-in 5s ease-in-out infinite; transform-origin: left center; }
+@keyframes fill-in {
+  0%, 100% { transform: scaleX(0.96); opacity: 0.7; }
+  50%      { transform: scaleX(1);    opacity: 1; }
+}
+.diagram .cut { animation: cut 5s ease-in-out infinite; }
+@keyframes cut {
+  0%, 40%  { opacity: 0.5; }
+  55%, 90% { opacity: 0.08; }
+  100%     { opacity: 0.5; }
+}
+
+/* the core / edge rings */
+.diagram .ring { fill: none; stroke: rgba(181, 181, 181, 0.25); stroke-width: 1; }
+.diagram .ring-dash {
+  fill: none;
+  stroke: rgba(181, 181, 181, 0.4);
+  stroke-width: 1;
+  stroke-dasharray: 3 7;
+  animation: spin 30s linear infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media only screen and (max-width: 1000px) {
+  .systems-grid { grid-template-columns: 1fr; }
+}
+
+@media only screen and (max-width: 700px) {
+  .systems-container { padding: 10px; }
+  .system { padding: 20px 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagram * { animation: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .system { opacity: 1 !important; transform: none !important; }
+}
