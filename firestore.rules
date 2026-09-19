@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Contact form submissions.
+    // Anyone may create one; nobody may read them back from the client.
+    // Messages are read in the Firebase console, which bypasses these rules.
+    match /contacts/{contactId} {
+      allow create: if isValidContact(request.resource.data);
+      allow read, update, delete: if false;
+    }
+
+    // Everything else stays closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidContact(data) {
+      return data.keys().hasOnly(['name', 'email', 'message', 'createdAt'])
+        && data.keys().hasAll(['name', 'email', 'message', 'createdAt'])
+        && data.name is string
+        && data.name.size() > 0 && data.name.size() <= 100
+        && data.email is string
+        && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && data.email.size() <= 200
+        && data.message is string
+        && data.message.size() > 0 && data.message.size() <= 5000
+        && data.createdAt == request.time;
+    }
+  }
+}

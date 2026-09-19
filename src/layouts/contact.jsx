@@ -4,7 +4,7 @@ import { HeadingText } from "../components/text";
 import Social from "../components/custom/social";
 import { IoSend } from "react-icons/io5";
 import { db } from "../configs/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 import "../styles/contact.css";
 import "../styles/form.css";
@@ -25,7 +25,12 @@ export default function Contact() {
     e.preventDefault();
     setButtonState("sending");
     try {
-      await addDoc(collection(db, "contacts"), formData);
+      await addDoc(collection(db, "contacts"), {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
+        createdAt: serverTimestamp(),
+      });
       setFormData({ name: "", email: "", message: "" });
       setButtonState("sent");
 
