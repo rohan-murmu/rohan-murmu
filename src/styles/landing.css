@@ -163,16 +163,9 @@
   .hero-graph { width: 128%; right: -30%; opacity: 0.7; }
 }
 
-/* the copy sits on its own plate so the lattice never fights it */
+/* keep the copy above the backdrop; it needs no plate behind it */
 .intro, .year { z-index: 2; }
 
-.intro::before {
-  content: "";
-  position: absolute;
-  inset: -22px -26px;
-  z-index: -1;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.88) 0%, transparent 72%);
-}
 
 /* headline build-up: each line resolves out of noise rather than sliding in */
 .landing-text {
