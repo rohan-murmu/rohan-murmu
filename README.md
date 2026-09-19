@@ -26,7 +26,7 @@ debugged turned out to be ordinary engineering problems wearing a new hat.
 | --- | --- |
 | **Backend systems** | Services split along failure lines, talking through a broker rather than through each other. A saga-based flow on RabbitMQ where every step has an undo — the interesting half of distributed work is not the happy path. |
 | **Realtime** | Rooms, presence, reconnect, fan-out. Connections are cheap to open and expensive to get right. |
-| **AI in the backend** | Not a chatbot bolted onto a product. Chunking, embeddings, hybrid search and reranking underneath; an agent loop and MCP tools on top. What you *refuse* to expose is as much of the design as what you do. |
+| **AI integrated systems** | Not a chatbot bolted onto a product. Chunking, embeddings, hybrid search and reranking underneath; an agent loop and MCP tools on top. What you *refuse* to expose is as much of the design as what you do. |
 | **Cloud & deployment** | The same build on a VM you keep warm or a function you do not, and knowing which the load shape deserves. Plus the managed pieces around it — object storage, queues, a vector store, secrets, and a pipeline that ships it without anyone watching. |
 
 ### Stack

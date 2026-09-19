@@ -207,7 +207,7 @@ const SYSTEMS = [
   },
   {
     index: "03",
-    title: "ai in the backend",
+    title: "ai integrated systems",
     Diagram: AiBackendDiagram,
     copy: (
       <>
