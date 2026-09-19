@@ -19,7 +19,7 @@ const Projects = () => {
     if (reduced) return;
 
     const ctx = gsap.context(() => {
-      gsap.utils.toArray(".project, .small").forEach((panel) => {
+      gsap.utils.toArray(".project, .mini").forEach((panel) => {
         gsap.fromTo(
           panel,
           { y: 50, opacity: 0 },
@@ -91,20 +91,20 @@ const Projects = () => {
         ))}
       </div>
 
-      <div className="small-head">
+      <div className="mini-head">
         <h3>also built</h3>
         <span>source only — not deployed</span>
       </div>
-      <div className="small-layout">
+      <div className="mini-layout">
         {smallProjects.map((sp) => (
-          <a className="small cursor-scale small" key={sp.name} href={sp.repo}
+          <a className="mini cursor-scale small" key={sp.name} href={sp.repo}
              target="_blank" rel="noreferrer">
-            <div className="small-top">
+            <div className="mini-top">
               <h4>{sp.name}</h4>
               <FaGithub size={15} />
             </div>
             <p>{sp.line}</p>
-            <div className="small-tags">
+            <div className="mini-tags">
               {sp.tags.map((t) => (
                 <span key={t}>{t}</span>
               ))}
