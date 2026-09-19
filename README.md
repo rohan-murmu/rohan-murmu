@@ -28,8 +28,6 @@ debugged turned out to be ordinary engineering problems wearing a new hat.
 | **Realtime** | Rooms, presence, reconnect, fan-out. Connections are cheap to open and expensive to get right. |
 | **AI in the backend** | Not a chatbot bolted onto a product. Chunking, embeddings, hybrid search and reranking underneath; an agent loop and MCP tools on top. What you *refuse* to expose is as much of the design as what you do. |
 | **Cloud & deployment** | The same build on a VM you keep warm or a function you do not, and knowing which the load shape deserves. Plus the managed pieces around it — object storage, queues, a vector store, secrets, and a pipeline that ships it without anyone watching. |
-| **Context** | Windowing, prioritisation, compaction, code maps. Nearly every agent failure I have actually debugged was a budget failure: the right fact existed and never made it in. |
-| **Determinism** | Typed results, policy over scoring. A classifier that answers differently on identical input is not a gate, and its input is attacker-controlled anyway. The model explains; it never decides. |
 
 ### Stack
 

@@ -7,75 +7,6 @@ import "../styles/systems.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* Context: a window is a budget, and most agent failures are budget failures. */
-function ContextDiagram() {
-  const segs = [
-    { w: 46, t: "system" },
-    { w: 58, t: "task" },
-    { w: 196, t: "retrieved" },
-    { w: 116, t: "history" },
-    { w: 84, t: "reserve" },
-  ];
-  let x = 10;
-  return (
-    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Context budget">
-      <rect className="node" x="8" y="24" width="504" height="34" rx="2" />
-      {segs.map((s, i) => {
-        const el = (
-          <g key={s.t}>
-            <rect className={i === 2 ? "cell hit" : "cell"} x={x + 2} y={28} width={s.w - 4} height={26} rx="1" />
-            <text className="lbl-sm" x={x + s.w / 2} y={70} textAnchor="middle">{s.t}</text>
-          </g>
-        );
-        x += s.w;
-        return el;
-      })}
-      <text className="lbl" x="8" y="18">context window</text>
-
-      {/* candidates below: what was considered, and what got cut */}
-      <text className="lbl" x="8" y="94">candidates</text>
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-        <rect key={i} className={i > 2 ? "cell cut" : "cell hit"}
-              x={8 + i * 32} y={102} width="26" height="16" rx="1" />
-      ))}
-      <text className="lbl-sm" x="272" y="114">trimmed before the model ever sees them</text>
-    </svg>
-  );
-}
-
-/* The through-line of both projects: the model explains, the code decides. */
-function CoreDiagram() {
-  const cx = 150, cy = 66;
-  return (
-    <svg className="diagram" viewBox="0 0 520 140" role="img" aria-label="Deterministic core, model at the edge">
-      <circle className="ring-dash" cx={cx} cy={cy} r="56" style={{ transformOrigin: `${cx}px ${cy}px` }} />
-      <circle className="ring" cx={cx} cy={cy} r="34" />
-      <text className="lbl" x={cx} y={cy - 4} textAnchor="middle">core</text>
-      <text className="lbl-sm" x={cx} y={cy + 10} textAnchor="middle">deterministic</text>
-
-      {[
-        { x: cx, y: cy - 70, t: "explain" },
-        { x: cx + 72, y: cy + 4, t: "summarise" },
-        { x: cx, y: cy + 78, t: "suggest" },
-        { x: cx - 76, y: cy + 4, t: "draft" },
-      ].map((n) => (
-        <text key={n.t} className="lbl pulse" x={n.x} y={n.y} textAnchor="middle">{n.t}</text>
-      ))}
-
-      <line className="wire" x1="222" y1="66" x2="286" y2="66" />
-      <rect className="node-fill" x="286" y="30" width="116" height="20" rx="2" />
-      <text className="lbl-sm" x="294" y="44">parse · diff · check</text>
-      <rect className="node-fill" x="286" y="56" width="116" height="20" rx="2" />
-      <text className="lbl-sm" x="294" y="70">typed result</text>
-      <rect className="cell cut" x="286" y="82" width="116" height="20" rx="2" />
-      <text className="lbl-sm" x="294" y="96">model as a gate ✗</text>
-      <text className="lbl-sm" x="412" y="70">reproducible,</text>
-      <text className="lbl-sm" x="412" y="84">and testable</text>
-    </svg>
-  );
-}
-
-
 /* Services that fail independently, and a broker that lets them. */
 function BackendDiagram() {
   return (
@@ -302,32 +233,6 @@ const SYSTEMS = [
     ),
     tags: ["AWS · EC2 · S3 · Lambda", "GCP · Cloud Run", "Docker", "GitHub Actions", "Jenkins", "CI/CD"],
   },
-  {
-    index: "05",
-    title: "context",
-    Diagram: ContextDiagram,
-    copy: (
-      <>
-        A window is a budget. Nearly every agent failure I have actually debugged was a budget
-        failure — <b>the right fact existed and never made it in</b>, or the wrong one crowded
-        it out. Codebase indexes and code maps exist to spend that budget well.
-      </>
-    ),
-    tags: ["context engineering", "prioritisation", "compaction", "code maps", "indexing"],
-  },
-  {
-    index: "06",
-    title: "determinism",
-    Diagram: CoreDiagram,
-    copy: (
-      <>
-        The thread through all of it. Put the model at the edge and keep the decision in code: a
-        classifier that answers differently on identical input is not a gate, and its input is
-        attacker-controlled anyway. <b>The model explains; it never decides.</b>
-      </>
-    ),
-    tags: ["typed results", "policy over scoring", "eval harnesses", "reproducibility"],
-  },
 ];
 
 export default function Systems() {
@@ -362,8 +267,8 @@ export default function Systems() {
       </div>
       <p className="systems-intro cursor-scale small">
         Backend and AI as one system, not two skill sets. Services and realtime carry it,
-        retrieval and agents run inside it, and the cloud, context and determinism decisions are
-        what keep it honest once real traffic arrives.
+        retrieval and agents run inside it, and it ships to a VM or a function depending on what
+        the load actually looks like.
       </p>
       <div className="systems-grid">
         {SYSTEMS.map(({ index, title, Diagram, copy, tags, wide }) => (
