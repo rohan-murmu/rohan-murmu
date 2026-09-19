@@ -1,64 +1,66 @@
-# My Portfolio - Rohan Murmu Portfolio
+<h1 align="center">Rohan Murmu</h1>
 
-Welcome to my portfolio! This is a modern, responsive, and visually appealing portfolio built with **React**, **Vite**, and **GSAP** for animations. It also integrates **Firebase** for the contact form, making it easy for visitors to get in touch. The portfolio showcases my skills and projects, in a clean and interactive way.
+<p align="center">
+  <strong>AI engineer.</strong> I build the layer between language models and real systems.
+</p>
 
----
-
-## Live Demo
-
-Check out the live version of my portfolio here:  
-👉 [Here](https://rohan-murmu.vercel.app/)
-
----
-
-## Technologies Used
-
-- **Frontend**: React, Vite Bundler, GSAP (for animations).
-- **Styling**: CSS (custom styles).
-- **Backend Integration**: Firebase (for the contact form).
+<p align="center">
+  <a href="https://rohan-murmu.vercel.app/"><b>rohan-murmu.vercel.app</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://jasper-toolbox.vercel.app/">jasper</a>
+  &nbsp;·&nbsp;
+  <a href="https://gait-tool.vercel.app/">gait</a>
+</p>
 
 ---
 
-## How to Use and Customize
+I design, build, deploy and optimise systems around language models — retrieval, agents,
+tool surfaces, context, evaluation. Backend and infrastructure by background, so what I
+build ships and keeps running rather than demoing well once.
 
-1. **Prerequisites**:
-   - Ensure Node.js and npm are installed on your system.
-   - Clone the repository:
-     ```bash
-     git clone https://github.com/scythrine05/rohan-murmu.git
-     cd rohan-murmu
-     ```
+Most of my recent work is developer infrastructure for coding agents: the unglamorous layer
+that decides whether an agent is useful on a real codebase or just fast at being wrong.
 
-2. **Install Dependencies**:
-   - Run the following command to install all dependencies:
-     ```bash
-     npm install
-     ```
+### What I work on
 
-3. **Edit Your Data**:
-   - Update the `skillData` and `cardsData` files to reflect your own skills and projects.
+| | |
+| --- | --- |
+| **Retrieval** | Chunking that respects structure, embeddings chosen for the corpus, hybrid search, reranking. The vector store is the easy part — deciding what has earned a place in the window is not. |
+| **Agents** | Tool calling, multi-step loops, MCP servers. What you *refuse* to expose is as much of the design as what you do. |
+| **Context** | Windowing, prioritisation, compaction, code maps, codebase indexing. Nearly every agent failure I have actually debugged was a budget failure. |
+| **Delivery** | Docker, Cloud Run, local models via Ollama, routing between a small local model and a frontier one by cost and risk, with a fallback. A model that only runs on my laptop is a demo. |
+| **Optimisation** | Eval harnesses, caching, batching, model selection, LoRA / QLoRA. I build the harness before the optimisation, because a claim without a number is a vibe. |
+| **Determinism** | Typed results, policy over scoring. A classifier that answers differently on identical input is not a gate — and its input is attacker-controlled anyway. The model explains; it never decides. |
 
-4. **Set Up Firebase**:
-   - Create a Firebase project and enable the Firestore database.
-   - Add your Firebase configuration to the `.env` file:
-     ```env
-     VITE_FIREBASE_API_KEY=your-firebase-api-key
-     VITE_FIREBASE_AUTH_DOMAIN=your-firebase-auth-domain
-     VITE_FIREBASE_PROJECT_ID=your-firebase-project-id
-     VITE_FIREBASE_STORAGE_BUCKET=your-firebase-storage-bucket
-     VITE_FIREBASE_MESSAGING_SENDER_ID=your-firebase-messaging-sender-id
-     VITE_FIREBASE_APP_ID=your-firebase-app-id
-     ```
+### Projects
 
-5. **Start the Application**:
-   - Run the development server:
-     ```bash
-     npm run dev
-     ```
-   - The portfolio will be available at `http://localhost:5173`.
+**[jasper](https://github.com/rohan-murmu/jasper)** — architectural decisions, enforced &nbsp;·&nbsp; `Go` `1 dependency` `10 checks` `4 languages` `7 MCP tools`
 
----
+Your coding agent makes architectural decisions every hour. Jasper records them as
+executable checks and tells the agent — or the build — when the code stops honouring them.
+Compilers ask *is this valid*, tests ask *does this work*, jasper asks *is this what we
+agreed*. A pure engine with thin ports: the CLI, the MCP server and CI all run the same
+function. &nbsp;[**site**](https://jasper-toolbox.vercel.app/)
 
-## Contributing
+**[gait](https://github.com/rohan-murmu/gait)** — the edit that broke the build &nbsp;·&nbsp; `TypeScript` `git internals` `MCP`
 
-Feel free to fork this repository and customize it for your own portfolio. If you find any issues or have suggestions for improvements, please open an issue or submit a pull request. Happy coding!
+An agent edits forty files in twenty minutes, a test fails, and its recovery strategy is to
+re-read files and guess. `git bisect` already solves this, except it searches commits and an
+agent produces edits. gait checkpoints every edit as a real commit object off your branches
+and bisects them in a throwaway worktree. Benchmarked across two languages: **93% fewer files
+to inspect** — and the README documents the case where it loses.
+&nbsp;[**site**](https://gait-tool.vercel.app/)
+
+Both are open source and both ship an MCP server. Before these: a realtime multiplayer
+backend in Go with WebSockets and a Godot client, a RAG system over asset metadata, and a
+developer platform with CI/CD on AWS.
+
+### Stack
+
+`Go` · `TypeScript` · `Python` · `React` · `PostgreSQL` · `Docker` · `GCP / Cloud Run` · `MCP` · `Ollama`
+
+### Elsewhere
+
+[Portfolio](https://rohan-murmu.vercel.app/) · [Email](mailto:tripsync.officialll@gmail.com)
+
+<sub>This repository is also the source of the portfolio site — see [PORTFOLIO.md](PORTFOLIO.md).</sub>
