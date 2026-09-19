@@ -50,12 +50,6 @@ export const projectsData = [
 /* Smaller things, source only. Each one exists because it needed to, not as a demo. */
 export const smallProjects = [
   {
-    name: "ARRS",
-    line: "A 2D scene generator. Retrieval over a tagged asset pack, a local model doing the composing, and a schema the output has to satisfy before anything renders.",
-    tags: ["Go", "Ollama", "RAG", "local LLM"],
-    repo: "https://github.com/rohan-murmu/ARRS",
-  },
-  {
     name: "hubtrub",
     line: "Realtime multiplayer backend. A Go WebSocket hub broadcasting player motion to every connected client, structured hub-per-concern so another channel drops in beside it. Godot client on the other end.",
     tags: ["Go", "WebSockets", "Godot"],
