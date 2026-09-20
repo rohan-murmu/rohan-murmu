@@ -6,7 +6,7 @@ const linkData = [
     icon: <FaLinkedin size={26} />,
   },
   {
-    url: "https://github.com/scythrine05",
+    url: "https://github.com/rohan-murmu",
     icon: <FaGithub size={26} />,
   },  {
     url: "https://www.facebook.com/rohan.murmu.39/",
