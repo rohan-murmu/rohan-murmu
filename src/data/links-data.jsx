@@ -11,9 +11,6 @@ const linkData = [
   },  {
     url: "https://www.facebook.com/rohan.murmu.39/",
     icon: <FaFacebook size={26} />,
-  },  {
-    url: "https://drive.google.com/file/d/10VR6_R_sL3qXkEPA0YJrhh1Wp4F18chX/view?usp=sharing",
-    icon: <FaFile size={26} />,
   },
 ];
 
